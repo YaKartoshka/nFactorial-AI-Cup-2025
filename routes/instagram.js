@@ -14,7 +14,7 @@ const instaProfilePath = path.join(__dirname, '..', 'insta_profile.json');
 const instaDataPath = path.join(__dirname, '..', 'insta_data.json');
 const instaMenuPath = path.join(__dirname, '..', 'insta_menu.json');
 const DB_FILE  = path.join(__dirname, '..', 'insta_chats.json');
-
+const XLSX = require('xlsx');
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "temp/");
@@ -24,6 +24,21 @@ const storage = multer.diskStorage({
     cb(null, `recording_${Date.now()}${ext}`);
   },
 });
+
+const excelStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "temp/");
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (ext !== '.xlsx' && ext !== '.xls') {
+      return cb(new Error('Только Excel-файлы разрешены'));
+    }
+    cb(null, 'database.xlsx'); // всегда одно имя
+  }
+});
+
+const uploadExcel = multer({ storage: excelStorage });
 
 const upload = multer({
   limits: { fileSize: 100 * 1024 * 1024 }, // 10MB limit,
@@ -49,16 +64,16 @@ router.post('/', function (req, res) {
     if (!chat_data) {
       // Create chat if doesn't exist
       return createChat(sender, 1, function () {
-        getInstagramSettings().then(instagram_settings => {
+        const instagram_settings = readInstagramData(instaMenuPath)
           if (instagram_settings) {
             const welcome = instagram_settings.instagram_welcome_message;
-            const menu_options = JSON.parse(instagram_settings.menu_options || '[]');
+            const menu_options = instagram_settings.menu_options || [];
             if (welcome) {
               addMessage(sender, 'bot', welcome);
               instagramSendMessage(sender, recipient, welcome, menu_options);
             }
           }
-        });
+      
       });
     }
 
@@ -66,8 +81,9 @@ router.post('/', function (req, res) {
     addMessage(sender, 'user', text);
 
     // Continue with logic
-    readInstagramData(instaMenuPath).then(instagram_settings => {
-      const menu_options = JSON.parse(instagram_settings.menu_options || '[]');
+    const instagram_settings = readInstagramData(instaMenuPath)
+    console.log(instaMenuPath)
+      const menu_options = instagram_settings.menu_options || [];
 
       // Check if user text matches a menu option
       const targetOption = menu_options.find(
@@ -87,7 +103,7 @@ router.post('/', function (req, res) {
           console.error('Groq error:', err.message);
         });
       }
-    });
+ 
   });
 
   res.sendStatus(200);
@@ -95,10 +111,19 @@ router.post('/', function (req, res) {
 
 
 async function getGroqResponse(userText, data='') {
+  const filePath = path.join(__dirname, '..', 'temp', 'database.xlsx');
+
+  const textFromExcel = extractTextFromExcel(filePath) || '';
+  // Prepare the system message with Excel data context
+  let systemMessage = 'Ты ассистент для пользователей в Instagram.';
+  
+  if (textFromExcel) {
+    systemMessage += `\n\nУ тебя есть доступ к следующим данным из базы данных:\n${textFromExcel}`;
+  }
   const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
     model: 'llama-3.3-70b-versatile', // or llama3-70b, etc
     messages: [
-      { role: 'system', content: 'Ты ассистент для пользователей в Instagram.' },
+      { role: 'system', content: systemMessage },
       { role: 'user', content: userText }
     ]
   }, {
@@ -338,7 +363,11 @@ function writeInstagramData(filePath, data) {
 }
 
 
+router.post('/upload-excel', uploadExcel.single('file'), (req, res) => {
 
+    res.json({ status: 'ok', message: 'Excel файл успешно загружен' });
+  
+});
 
 instagramSendMessage = function(sender, recipient, message, buttons){ //global
   const sanitizedMessage = message.toString().trim();
@@ -358,7 +387,7 @@ instagramSendMessage = function(sender, recipient, message, buttons){ //global
   return new Promise((resolve, reject) => {  
   request({
     url: `https://graph.instagram.com/v16.0/me/messages`,
-    qs: {access_token:data.access_token},
+    qs: {access_token:data.instagram_token},
     method: 'POST',
     json: {
       recipient: {id:sender},
@@ -382,7 +411,31 @@ instagramSendMessage = function(sender, recipient, message, buttons){ //global
 
 
 
-// Load or initialize the DB
+
+
+function extractTextFromExcel(filePath) {
+    if (!fs.existsSync(filePath)) {
+        throw new Error('Файл Excel не найден.');
+    }
+
+    const workbook = XLSX.readFile(filePath);
+    let text = '';
+
+    workbook.SheetNames.forEach(sheetName => {
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // 2D-массив
+
+        text += `\n=== Лист: ${sheetName} ===\n`;
+
+        jsonData.forEach(row => {
+            const rowText = row.map(cell => (cell !== undefined ? cell : '')).join('\t');
+            text += rowText + '\n';
+        });
+    });
+
+    return text.trim();
+}
+
 function loadDB() {
   if (!fs.existsSync(DB_FILE)) {
     fs.writeFileSync(DB_FILE, JSON.stringify({ chats: {} }, null, 2));
@@ -396,6 +449,7 @@ function saveDB(db) {
 
 function getChat(user_id, cb) {
   const db = loadDB();
+ 
   const chat = db.chats[user_id] || null;
   cb(chat);
 }

@@ -38,7 +38,7 @@
                 cursor: pointer;
                 border-left: 4px solid #007bff;
                 padding: 10px;
-          
+
             }
 
             .example-card:hover {
@@ -54,7 +54,7 @@
                 margin-bottom: 20px;
             }
 
-            .category-header h3{
+            .category-header h3 {
                 color: white !important;
             }
 
@@ -111,6 +111,12 @@
                                     <a class="nav-link" data-bs-toggle="tab" href="#instagram_menu_info"
                                         aria-selected="false" tabindex="-1" role="tab">
                                         Меню
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#instagram_data_info"
+                                        aria-selected="false" tabindex="-1" role="tab">
+                                        Данные
                                     </a>
                                 </li>
                             </ul>
@@ -225,6 +231,24 @@
                                     </div>
 
                                 </div>
+
+                                <div class="tab-pane fade" id="instagram_data_info" role="tabpanel">
+                                    <fieldset class="form-group">
+                                        <legend><span>База данных</span></legend>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="">Excel File</label>
+                                            <input type="file" id="excelfile">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="">Загрузите ваш Excel</label>
+
+                                            <button class="btn btn-secondary btn-sm" onclick="addExcel()">+
+                                                Добавить</button>
+                                            <br>
+                                    </fieldset>
+                                
+
+                                </div>
                             </div>
 
                         </div>
@@ -244,7 +268,8 @@
                         <br> <br>
                         <audio id="audioPlayer" playsinline controls style="display: none;"></audio>
 
-                        <button id="send-recording" class="btn btn-primary mt-2 mb-2" style="display: none;">Отправить</button>
+                        <button id="send-recording" class="btn btn-primary mt-2 mb-2"
+                            style="display: none;">Отправить</button>
                         <p id="await_message" class="mt-2" style="display: none;">Ожидайте ответ в течении 10-15 секунд
                         </p>
 
@@ -516,7 +541,7 @@
 
 
 
-   <script>
+    <script>
         function copyText(button) {
             const text = button.parentElement.querySelector('.example-text').textContent.trim();
             navigator.clipboard.writeText(text).then(() => {
@@ -528,7 +553,7 @@
                 button.classList.replace('btn-outline-danger', 'btn-success');
                 button.classList.replace('btn-outline-info', 'btn-success');
                 button.classList.replace('btn-outline-secondary', 'btn-success');
-                
+
                 setTimeout(() => {
                     button.textContent = originalText;
                     button.classList.replace('btn-success', 'btn-outline-primary');
@@ -537,7 +562,7 @@
         }
 
         // Добавляем анимацию появления карточек
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const cards = document.querySelectorAll('.example-card');
             cards.forEach((card, index) => {
                 card.style.opacity = '0';
@@ -928,10 +953,10 @@
             return Promise.resolve(null);
         }
 
-       function parseTextToContent(text) {
+        function parseTextToContent(text) {
             const lines = text.split('\n');
             const content = [];
-            
+
             lines.forEach(rawLine => {
                 const line = rawLine.trim();
 
@@ -1092,7 +1117,33 @@
             });
         }
 
+        function addExcel() {
+            const fileInput = document.getElementById('excelfile');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Please choose a file");
+                return;
+            }
 
+            const formData = new FormData();
+            formData.append("file", file);
+
+            $.ajax({
+                url: "/instagram/upload-excel",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    alert("File uploaded successfully!");
+                    console.log(response);
+                },
+                error: function (err) {
+                    alert("Error uploading file.");
+                    console.error(err);
+                }
+            });
+        }
     </script>
 
 </body>
