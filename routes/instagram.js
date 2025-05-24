@@ -279,6 +279,24 @@ router.post('/api', upload.single("audio"), async function (req, res, next) {
       res.json(data)
       
     }
+
+    else
+
+    if (action == 'getPosts'){
+       const imagesDir = path.join(__dirname, '..', 'public/images');
+
+        fs.readdir(imagesDir, (err, files) => {
+          if (err) {
+            return res.status(500).json({ error: 'Unable to read images directory' });
+          }
+
+          const instaImages = files
+            .filter(file => file.startsWith('insta_'))
+            .map(file => `/public/images/${file}`); // Adjust path for frontend
+
+          res.json(instaImages);
+        });
+    }
 })
 
 router.post('/post', upload.single("image"), async function (req, res, next) {

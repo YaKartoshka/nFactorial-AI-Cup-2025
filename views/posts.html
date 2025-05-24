@@ -31,6 +31,156 @@
                     width: 4px;
                 }
             }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 25px;
+            }
+
+            .generation-block {
+                background: white;
+                border-radius: 15px;
+                padding: 25px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .generation-block:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            }
+
+            .generation-block::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24);
+                background-size: 200% 100%;
+                animation: gradient 3s ease infinite;
+            }
+
+            @keyframes gradient {
+                0% {
+                    background-position: 0% 50%;
+                }
+
+                50% {
+                    background-position: 100% 50%;
+                }
+
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+
+            .block-title {
+                font-size: 1.4em;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+            }
+
+            .block-title::before {
+                content: '🎨';
+                margin-right: 10px;
+                font-size: 1.2em;
+            }
+
+            .prompt {
+                background: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                border-left: 4px solid #007bff;
+                margin-bottom: 15px;
+                font-style: italic;
+                color: #555;
+                line-height: 1.6;
+            }
+
+            .generate-btn {
+                width: 100%;
+                padding: 12px 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 1.1em;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .generate-btn:hover {
+                transform: scale(1.02);
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            }
+
+            .generate-btn:active {
+                transform: scale(0.98);
+            }
+
+            .style-tag {
+                display: inline-block;
+                background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 15px;
+                font-size: 0.8em;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+
+            @media (max-width: 768px) {
+                .grid {
+                    grid-template-columns: 1fr;
+                }
+
+                h1 {
+                    font-size: 2em;
+                }
+
+                .generation-block {
+                    padding: 20px;
+                }
+            }
+
+            .image-card {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                cursor: pointer;
+            }
+
+            .image-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            .image-card img {
+                height: 250px;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+
+            .loading-spinner {
+                display: none;
+            }
+
+            .loading-spinner.show {
+                display: flex;
+            }
+
+            #works {
+                min-height: 400px;
+            }
         </style>
 </head>
 
@@ -53,7 +203,7 @@
                         <form id="uploadForm">
                             <div class="form-group">
                                 <label for="imageInput">Изображение</label>
-                                <input type="file" id="imageInput" accept="image/png">
+                                <input type="file" id="imageInput" accept="image/*">
 
                             </div>
                             <div class="form-group">
@@ -64,6 +214,144 @@
                         </form>
 
                         <div id="preview" class="mt-4"></div>
+                    </div>
+                </div>
+                <div class="element-box">
+                    <ul class="nav nav-tabs" style="border: none;">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#templates">
+                                Шаблоны
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#works">
+                                Мои работы
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div class="grid tab-pane active" id="templates">
+                        <!-- Блок 1: Неоновый градиент -->
+                        <div class="generation-block">
+                            <div class="style-tag">Неоновый стиль</div>
+                            <h3 class="block-title">Неоновое свечение</h3>
+                            <div class="prompt">
+                                Сделай фон неоновым с розово-оранжевым градиентом и добавь свечение вокруг кроссовка.
+                                Создай
+                                атмосферу киберпанка с яркими цветами и световыми эффектами.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(1)">Выбрать шаблон</button>
+                        </div>
+
+                        <!-- Блок 2: Городской пейзаж -->
+                        <div class="generation-block">
+                            <div class="style-tag">Городской стиль</div>
+                            <h3 class="block-title">Ночной город</h3>
+                            <div class="prompt">
+                                Размести кроссовок на фоне городского пейзажа ночью с огнями и эффектом отражения.
+                                Добавь
+                                атмосферу мегаполиса с небоскребами и неоновой подсветкой.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(2)">Выбрать шаблон</button>
+                        </div>
+
+                        <!-- Блок 3: Поп-арт -->
+                        <div class="generation-block">
+                            <div class="style-tag">Поп-арт</div>
+                            <h3 class="block-title">Новая коллекция 2025</h3>
+                            <div class="prompt">
+                                Добавь на фон всплески краски в стиле поп-арт и надпись "Новая коллекция 2025".
+                                Используй
+                                яркие контрастные цвета и динамичную композицию.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(3)">Выбрать шаблон</button>
+                        </div>
+
+                        <!-- Блок 4: Черно-белый контраст -->
+                        <div class="generation-block">
+                            <div class="style-tag">Контраст</div>
+                            <h3 class="block-title">В центре внимания</h3>
+                            <div class="prompt">
+                                Сделай фон черно-белым, а кроссовок — единственным цветным элементом с надписью "В
+                                центре
+                                внимания". Создай драматический эффект селективного цвета.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(4)">Выбрать шаблон</button>
+                        </div>
+
+                        <!-- Блок 5: Взрыв частиц -->
+                        <div class="generation-block">
+                            <div class="style-tag">Динамика</div>
+                            <h3 class="block-title">Энергия в движении</h3>
+                            <div class="prompt">
+                                Размести кроссовок в центре взрыва цветных частиц и добавь текст "Энергия в каждом
+                                шаге".
+                                Создай ощущение движения и силы.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(5)">Выбрать шаблон</button>
+                        </div>
+
+                        <!-- Блок 6: Беговая дорожка -->
+                        <div class="generation-block">
+                            <div class="style-tag">Спорт</div>
+                            <h3 class="block-title">Покори дистанцию</h3>
+                            <div class="prompt">
+                                Создай фон в виде беговой дорожки, уходящей в перспективу, и добавь слоган "Покори
+                                дистанцию". Передай ощущение скорости и целеустремленности.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(6)">Выбрать шаблон</button>
+                        </div>
+
+                        <!-- Блок 7: Комикс стиль -->
+                        <div class="generation-block">
+                            <div class="style-tag">Комикс</div>
+                            <h3 class="block-title">Суперскорость</h3>
+                            <div class="prompt">
+                                Оформление в стиле комикса: фон в виде точек Бена Дэя и облачко с текстом "Суперскорость
+                                включена!" Используй яркие цвета и динамичные линии.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(7)">Выбрать шаблон</button>
+                        </div>
+
+                        <!-- Блок 8: Водный эффект -->
+                        <div class="generation-block">
+                            <div class="style-tag">Элегантность</div>
+                            <h3 class="block-title">Чистый стиль</h3>
+                            <div class="prompt">
+                                Добавь отражающий водяной эффект на полу под кроссовком и надпись "Чистый стиль". Создай
+                                атмосферу роскоши и совершенства.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(8)">Выбрать шаблон</button>
+                        </div>
+
+                        <!-- Блок 9: Космос -->
+                        <div class="generation-block">
+                            <div class="style-tag">Космос</div>
+                            <h3 class="block-title">Выход за пределы</h3>
+                            <div class="prompt">
+                                Размести кроссовок в космическом пространстве на фоне планет и звёзд с текстом "Выход за
+                                пределы". Создай футуристическую атмосферу бесконечности.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(9)">Выбрать шаблон</button>
+                        </div>
+
+                        <!-- Блок 10: Минимализм -->
+                        <div class="generation-block">
+                            <div class="style-tag">Премиум</div>
+                            <h3 class="block-title">Лимитированная серия</h3>
+                            <div class="prompt">
+                                Сделай фон минималистичным белым с тенями, и добавь надпись "Лимитированная серия"
+                                золотыми
+                                буквами. Подчеркни эксклюзивность и премиальность.
+                            </div>
+                            <button class="generate-btn" onclick="generateImage(10)">Выбрать шаблон</button>
+                        </div>
+                    </div>
+
+                    <div class="element-box tab-pane" id="works">
+
                     </div>
                 </div>
 
@@ -90,7 +378,7 @@
         $(document).ready(function () {
             loading(1);
             let base64Image = '';
-
+            getPosts()
             $('#imageInput').on('change', function (event) {
                 const file = event.target.files[0];
                 if (!file) return;
@@ -98,7 +386,7 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     base64Image = e.target.result;
-                    $('#preview').html(`<p>Предпросмотр:</p><img width="400" src="${base64Image}" alt="Preview" class="img-fluid"/>`);
+                    $('#preview').html(`<p>Предпросмотр:</p><img width="250" src="${base64Image}" alt="Preview" class="img-fluid"/>`);
                 };
                 reader.readAsDataURL(file);
             });
@@ -116,8 +404,12 @@
                 const formData = new FormData();
                 formData.append('image', imageFile);
                 formData.append('description', description);
-
-                 $.ajax({
+                $.ambiance({
+                    message: `Отправлено. Ваша работя появиться через несколько минут.`,
+                    type: "success",
+                    fade: true
+                });
+                $.ajax({
                     url: '/instagram/post',
                     type: 'POST',
                     data: formData,
@@ -128,7 +420,7 @@
                         window.open(response.url, '_blank');
                     },
                     error: function (err) {
-                    console.error("Error editing image:", err);
+                        console.error("Error editing image:", err);
                     }
                 });
             });
@@ -137,7 +429,91 @@
             loading(0);
         });
 
+        function generateImage(blockNumber) {
+            const prompts = [
+                "Сделай фон неоновым с розово-оранжевым градиентом и добавь свечение вокруг кроссовка. Создай атмосферу киберпанка с яркими цветами и световыми эффектами.",
+                "Размести обьект на фоне городского пейзажа ночью с огнями и эффектом отражения. Добавь атмосферу мегаполиса с небоскребами и неоновой подсветкой.",
+                "Добавь на фон всплески краски в стиле поп-арт и надпись \"Новая коллекция 2025\". Используй яркие контрастные цвета и динамичную композицию.",
+                "Сделай фон черно-белым, а обьект — единственным цветным элементом с надписью \"В центре внимания\". Создай драматический эффект селективного цвета.",
+                "Размести обьект в центре взрыва цветных частиц и добавь текст \"Энергия в каждом шаге\". Создай ощущение движения и силы.",
+                "Создай фон в виде беговой дорожки, уходящей в перспективу, и добавь слоган \"Покори дистанцию\". Передай ощущение скорости и целеустремленности.",
+                "Оформление в стиле комикса: фон в виде точек Бена Дэя и облачко с текстом \"Суперскорость включена!\" Используй яркие цвета и динамичные линии.",
+                "Добавь отражающий водяной эффект на полу под кроссовком и надпись \"Чистый стиль\". Создай атмосферу роскоши и совершенства.",
+                "Размести обьект в космическом пространстве на фоне планет и звёзд с текстом \"Выход за пределы\". Создай футуристическую атмосферу бесконечности.",
+                "Сделай фон минималистичным белым с тенями, и добавь надпись \"Лимитированная серия\" золотыми буквами. Подчеркни эксклюзивность и премиальность."
+            ];
 
+            // Анимация кнопки
+            $('#descriptionInput').val(prompts[blockNumber - 1])
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        }
+
+        function getPosts() {
+            // Show loading spinner
+            $('.loading-spinner').addClass('show');
+            $('#works').empty();
+
+            $.ajax({
+                url: '/instagram/api',
+                type: 'POST',
+                data: {
+                    action: 'getPosts'
+                },
+                success: function (response) {
+                    console.log(response);
+
+                    // Hide loading spinner
+                    $('.loading-spinner').removeClass('show');
+
+                    var worksHTML = '<div class="row g-4">';
+
+                    response.forEach((img_url, index) => {
+                        // Start new row every 3 images
+                        if (index > 0 && index % 3 === 0) {
+                            worksHTML += '</div><div class="row g-4 mt-2">';
+                        }
+
+                        worksHTML += `
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="card image-card h-100" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="${img_url}">
+                                    <div class="card-body p-0">
+                                        <img src="${img_url}" class="card-img-top w-100" alt="Instagram Post" loading="lazy">
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    worksHTML += '</div>';
+
+                    // Add the HTML to the works container
+                    $('#works').html(worksHTML);
+
+                    // Add click event for modal
+                    $('.image-card').on('click', function () {
+                        var imgSrc = $(this).data('img-src');
+                        $('#modalImage').attr('src', imgSrc);
+                    });
+                },
+                error: function (err) {
+                    console.error("Error loading posts:", err);
+
+                    // Hide loading spinner
+                    $('.loading-spinner').removeClass('show');
+
+                    // Show error message
+                    $('#works').html(`
+                        <div class="alert alert-danger text-center" role="alert">
+                            <h4 class="alert-heading">Error Loading Posts</h4>
+                            <p>There was an error loading the Instagram posts. Please try again later.</p>
+                            <hr>
+                            <p class="mb-0">Check the console for more details.</p>
+                        </div>
+                    `);
+                }
+            });
+        }
     </script>
 </body>
 

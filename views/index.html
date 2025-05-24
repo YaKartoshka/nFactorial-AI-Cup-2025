@@ -928,28 +928,56 @@
             return Promise.resolve(null);
         }
 
-        function parseTextToContent(text) {
+       function parseTextToContent(text) {
             const lines = text.split('\n');
             const content = [];
+            
+            lines.forEach(rawLine => {
+                const line = rawLine.trim();
 
-            lines.forEach(line => {
-                if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
-                    // Заголовок раздела
+                if (!line) return; // Skip empty lines
+
+                // Section headers (e.g., **Section Title**)
+                if (line.startsWith('**') && line.endsWith('**')) {
                     content.push({
-                        text: line.replace(/\*\*/g, '').trim(),
+                        text: line.slice(2, -2).trim(),
                         style: 'sectionHeader',
-                        margin: [0, 10, 0, 5]
+                        margin: [0, 15, 0, 8]
                     });
-                } else if (line.trim().startsWith('*')) {
-                    // Пункт списка
+                }
+
+                // Unordered list items (e.g., * item or    * nested item)
+                else if (/^\*+\s/.test(line)) {
+                    const depth = line.match(/^\*+/)[0].length;
                     content.push({
-                        ul: [{ text: line.replace(/^\*\s*/, '').trim() }],
-                        margin: [10, 0, 0, 0]
+                        ul: [
+                            {
+                                text: line.replace(/^\*+\s*/, '').trim(),
+                                style: 'listItem'
+                            }
+                        ],
+                        margin: [10 * depth, 2, 0, 0]
                     });
-                } else if (line.trim() !== '') {
-                    // Простой абзац
+                }
+
+                // Ordered list items (e.g., 1. Item)
+                else if (/^\d+\.\s/.test(line)) {
                     content.push({
-                        text: line.trim(),
+                        ol: [
+                            {
+                                text: line.replace(/^\d+\.\s*/, '').trim(),
+                                style: 'listItem'
+                            }
+                        ],
+                        margin: [10, 2, 0, 0]
+                    });
+                }
+
+                // Normal paragraph
+                else {
+                    content.push({
+                        text: line,
+                        style: 'paragraph',
                         margin: [0, 5, 0, 0]
                     });
                 }
@@ -957,6 +985,7 @@
 
             return content;
         }
+
 
 
         function addNewInstagramMenuOption() {
