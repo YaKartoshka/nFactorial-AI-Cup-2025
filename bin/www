@@ -10,7 +10,8 @@ getConnection = function () {
 var app = require("../app");
 let port = 4001;
 
-
+const { OpenAI } = require('openai');
+openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 if (run_mode == 2) { 
   var server = http.createServer(app);

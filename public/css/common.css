@@ -18,10 +18,6 @@ header {
     border-bottom: 1px rgb(233, 233, 233) solid;
 }
 
-header .logo img {
-    height: 18px;
-}
-
 header .dropdown-content{
     z-index: 1;
 }

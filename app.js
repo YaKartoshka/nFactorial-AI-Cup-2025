@@ -1,3 +1,4 @@
+require('dotenv').config()
 var express = require('express');
 var fs = require('fs');
 var path = require('path');
@@ -9,9 +10,10 @@ var app = express();
 // -------- routes --------
 var index = require('./routes/index');
 var instagram = require('./routes/instagram');
+var integrations = require('./routes/integrations');
+var webhook = require('./routes/webhook');
 
 
-``
 
 //html ejs
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +43,9 @@ app.use(session({
 // -- routes --
 app.use('/', index);
 app.use('/instagram', instagram);  
+app.use('/integrfunc', integrations);  
+app.use('/webhook', webhook);  
+
 
 app.use((req, res, next) => {
     res.status(404).render('error')

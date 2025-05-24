@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        Postify.AI 
+        Postify.AI
     </title>
     <link rel="shortcut icon" href="../public/images/Favicon.png" type="image/x-icon">
     <%- include('./components/head.ejs.html') %>
@@ -40,45 +40,607 @@
         <div class="logo d-flex align-items-center">
             <i class="fa fa-bars px-2 py-0 me-3 burger-menu" style="display: none;" onclick="toggleMenu()"></i>
 
-            <a href="/"><img src="/public/images/CoachMate.png" alt=""></a>
+            <a href="/"><img src="/public/images/logo.png" width="150" alt=""></a>
         </div>
-  
+
     </header>
     <main>
         <%- include('./components/nav_bar.ejs.html') %>
             <div class="content-box home-page">
-              
+                <div class="element-box">
+                    <div>
+                        <div class="element-info-with-icon d-flex align-items-center">
+                            <div class="element-info-icon">
+                                <i class="fa fa-instagram"></i>
+                            </div>
+                            <div class="element-info-text">
+                                <h5 class="element-inner-header">Instagram интеграция</h5>
+                                <div class="element-inner-desc">Instagram интеграция</div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <ul class="nav nav-tabs" style="border: none;" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#instagram_connect_info"
+                                        aria-selected="true" role="tab">
+                                        Подключение
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#instagram_menu_info"
+                                        aria-selected="false" tabindex="-1" role="tab">
+                                        Меню
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="instagram_connect_info" role="tabpanel">
+                                    <fieldset class="form-group">
 
+                                        <div class="table-responsive">
+                                            <div id="instagram_username">
+                                                <div class="table-responsive">
+                                                    <table class="table table-lightborder">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Username</th>
+                                                                <th>Expires At</th>
+                                                                <th>Status</th>
+                                                                <th class="text-right"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr instagram_username="qazaq.arlany">
+                                                                <td></td>
+                                                                <td name="expires_at"></td>
+                                                                <td name="status"></td>
+                                                                <td name="button"><button
+                                                                        onclick="instagramDisconnect(this)"
+                                                                        class="btn btn-secondary btn-sm">disconnect the
+                                                                        account</button></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <li> Подключите ваш Instagram аккаунт к нашей платформе <a
+                                            href="https://www.instagram.com/oauth/authorize?client_id=561750103383697&amp;redirect_uri=https://2634-2a03-32c0-300c-fc1b-c5ab-c677-af3b-de75.ngrok-free.app /integrfunc/integrfunc_redirect_uri&amp;response_type=code&amp;scope=business_basic%2Cbusiness_manage_messages%2Cbusiness_manage_comments%2Cbusiness_content_publish">Продолжить
+                                            с Instagram</a><br>
+                                    </li>
+                                </div>
+                                <div class="tab-pane fade" id="instagram_menu_info" role="tabpanel">
+                                    <fieldset class="form-group">
+                                        <legend><span>Настройка меню</span></legend>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="">Привественное сообщение</label>
+                                            <textarea class="form-control" id="instagram_welcome_message"
+                                                rows="3"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="">Меню с кнопками</label>
+                                            <div id="instagram_menu">
+                                                <div class="row menu-option mt-2">
+                                                    <div class="col-3">
+                                                        <input type="text" class="form-control key"
+                                                            placeholder="Введите ключевое слово" value="цены">
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <textarea class="form-control value"
+                                                            placeholder="Введите ответ">Взрослый абонемент - 20 000тг/месяц групповые.
+Детский абонемент - 15 000тг/месяц групповые.</textarea>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-sm remove-option"
+                                                            onclick="removeMenuOption(this)">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div><br>
+                                                <div class="row menu-option mt-2">
+                                                    <div class="col-3">
+                                                        <input type="text" class="form-control key"
+                                                            placeholder="Введите ключевое слово" value="адрес">
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <textarea class="form-control value"
+                                                            placeholder="Введите ответ">Улица Женис 67, 2 этаж, вход через KFC.
+
+https://2gis.kz/astana/geo/9570784863338869</textarea>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-sm remove-option"
+                                                            onclick="removeMenuOption(this)">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div><br>
+                                                <div class="row menu-option mt-2">
+                                                    <div class="col-3">
+                                                        <input type="text" class="form-control key"
+                                                            placeholder="Введите ключевое слово" value="пробный урок">
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <textarea class="form-control value"
+                                                            placeholder="Введите ответ">Пробный урок - 1000тг. Как вас зовут и можете скинуть ваш номер телефона?
+
+С собой надо взять сменную одежду, обувь, перчатки (при наличии) и хорошее настроение.</textarea>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-sm remove-option"
+                                                            onclick="removeMenuOption(this)">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div><br>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-secondary btn-sm" onclick="addNewInstagramMenuOption()">+
+                                            Добавить</button>
+                                        <br>
+                                    </fieldset>
+                                    <div class="form-buttons-w">
+                                        <button class="btn btn-primary" onclick="saveInstagramSettings()"
+                                            id="save_instagram_menu_btn">Сохранить</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="element-box">
+                    <div id="business-form">
+                        <div class="mb-3">
+                            <label for="businessName" class="form-label">Название вашего бизнеса</label>
+                            <input type="text" class="form-control" id="businessName" name="businessName" required>
+                        </div>
+
+                        <button id="start-recording" class="btn btn-success">Начать</button>
+                        <button id="stop-recording" class="btn btn-danger" disabled>Остановить</button>
+                        <i id="isRecording" style="display: none;">Идет запись...</i>
+                        <br> <br>
+                        <audio id="audioPlayer" playsinline controls style="display: none;"></audio>
+                        <br><br>
+                        <button id="send-recording" class="btn btn-primary" style="display: none;">Отправить</button>
+                         <p id="await_message" class="mt-2" style="display: none;">Ожидайте ответ в течении 10-15 секунд</p>
+
+                         <div id="result"></div>
+                    </div>
+                </div>
             </div>
     </main>
     <footer></footer>
 
-   
 
 
 
 
 
 
-    <!-- END OF MODALS -->
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
 
-      
-        var globalNews;
 
-   
+       
+        let audioContext;
+
+        let isRecording = false;
+        let audioChunks = [];
+        let audioBlob;
+
         $(document).ready(function () {
             loading(1);
-      
-      
-            
+            getInstagramInfo()
             loading(0);
         });
 
 
+        function getInstagramInfo() {
+            $.ajax({
+                url: '/integrfunc',
+                method: "GET",
+                data: { 'action': 'getInstagramInfo' },
+                success: function (r) {
+                    if (r.username) {
+                        var html = '<tr instagram_username="' + r.username + '">\
+                        <td>'+ r.username + '</td>\
+                        <td name="expires_at">'+ (r.expires_at ? (new Date(r.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })) : '') + '</td>\
+                        <td name="status">'+ (r.status == 1 ? 'connected' : 'not connected') + '</td>\
+                        <td name="button">'+ (r.status == 1 ? '<button onclick="instagramDisconnect(this)" class="btn btn-secondary btn-sm">disconnect the account</button>' : '<button onclick="instagramConnect(this)" class="btn btn-primary btn-sm">connect this account</button>') + '</td>\
+                        </tr>';
+                        $('#instagram_username table tbody').html(html);
+                    } else if (!r.username && !r.user_id && r.status != null) {
+                        $('#nav-instagram .alert-warning').show();
+                    }
+                }
+            });
+        }
+
+        function instagramConnect(ths) {
+            loading(1);
+            var $t = $(ths).closest('tr');
+            $.ajax({
+                url: '/integrfunc',
+                method: 'GET',
+                data: { 'action': 'instagram_connect' },
+                success: function (r) {
+                    $t.find('td[name=status]').html('connected');
+                    $t.find('td[name=button]').html('<button onclick="instagramDisconnect(this)" class="btn btn-secondary btn-sm">disconnect the account</button>');
+                    loading(0);
+                }
+            });
+        }
+
+        function instagramDisconnect(ths) {
+            loading(1);
+            var $t = $(ths).closest('tr');
+            $.ajax({
+                url: '/integrfunc',
+                method: 'GET',
+                data: { 'action': 'instagram_disconnect' },
+                success: function (r) {
+                    $t.find('td[name=status]').html('disconnected');
+                    $t.find('td[name=button]').html('<button onclick="instagramConnect(this)" class="btn btn-primary btn-sm">connect this account</button>');
+                    loading(0);
+                }
+            });
+        }
+
+        function addNewInstagramMenuOption() {
+            const maxOptions = 5;
+            const currentOptions = $('#instagram_menu .menu-option').length;
+
+            if (currentOptions >= maxOptions) {
+                $.ambiance({
+                    message: "Можно добавить только 5 кнопок",
+                    type: "error",
+                    fade: true,
+                    width: 400
+                });
+                return;
+            }
+
+            const newOption = `
+                <div class="row menu-option mt-2">
+                    <div class="col-3">
+                        <input type="text" class="form-control key" placeholder="Введите ключевое слово">
+                    </div>
+                    <div class="col-6">
+                        <textarea type="text" class="form-control value" placeholder="Введите ответ"></textarea>
+                    </div>
+                     <div class="col-auto">
+                        <button type="button" class="btn btn-danger btn-sm remove-option" onclick="removeMenuOption(this)"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div><br>`;
+            $('#instagram_menu').append(newOption);
+        }
+
+        function removeMenuOption(button) {
+            $(button).closest('.menu-option').remove();
+        }
+
+        function saveInstagramSettings() {
+            loading(2, el = '#save_instagram_menu_btn');
+            const instagram_welcome_message = $("#instagram_welcome_message").val().trim();
+            const menu_options = [];
+            $('#instagram_menu .menu-option').each(function () {
+                const key = $(this).find('.key').val().trim();
+                const value = $(this).find('.value').val().trim();
+                if (key) {
+                    menu_options.push({ key, value });
+                }
+            });
+
+            if (!instagram_welcome_message) {
+                $.ambiance({
+                    message: "Привественное сообщение не может быть пустым",
+                    type: "error",
+                    fade: true,
+                    width: 400
+                });
+                loading(20, el = '#save_instagram_menu_btn');
+                return;
+            }
+
+            $.ajax({
+                url: "/settings",
+                method: 'post',
+                dataType: 'json',
+                data: { action: 'saveInstagramSettings', instagram_welcome_message: instagram_welcome_message, menu_options: menu_options },
+                success: function (data) {
+                    if (data.r) {
+                        $.ambiance({
+                            message: `Настройки Instagram сохранены`,
+                            type: "success",
+                            fade: true
+                        });
+                    }
+                    loading(20, el = '#save_instagram_menu_btn');
+                }
+            });
+        }
+
+
+        function getInstagramSettings() {
+            $.ajax({
+                url: "/settings",
+                method: 'post',
+                dataType: 'json',
+                data: { action: 'getInstagramSettings' },
+                success: function (instagram_settings) {
+                    $("#instagram_welcome_message").val(instagram_settings.instagram_welcome_message)
+                    if (JSON.parse(instagram_settings.menu_options).length) $('#instagram_menu').html('')
+                    JSON.parse(instagram_settings.menu_options).forEach((option) => {
+                        const newOption = `
+                            <div class="row menu-option mt-2">
+                                <div class="col-3">
+                                    <input type="text" class="form-control key" placeholder="Введите ключевое слово" value="${option.key}">
+                                </div>
+                                <div class="col-6">
+                                    <textarea class="form-control value" placeholder="Введите ответ">${option.value}</textarea>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-danger btn-sm remove-option" onclick="removeMenuOption(this)">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div><br>`;
+                        $('#instagram_menu').append(newOption);
+                    });
+                }
+            });
+        }
+
+
+        function instagramStatusCheck() {
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+            let status = params.get('instagram_status');
+            if (!status) return;
+            if (status == 1) {
+                $.ambiance({ message: "Instagram подключен", title: "Успешно!", type: "success", timeout: 3 });
+            } else if (status == 2) {
+                $.ambiance({ message: "Вы отменили подключение Instagram", title: "Отмена подключения!", type: "error", timeout: 3 });
+            } else {
+                $.ambiance({ message: "Что то пошло не так. Попробуйте позже", title: "Оишбка!", type: "error", timeout: 3 });
+            }
+            params.delete('instagram_status');
+            let newUrl = url.origin + url.pathname;
+            history.pushState(null, '', newUrl);
+        }
+
+
     </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+        function initAudioRecording() {
+            // Feature detection
+            const isMediaRecorderSupported = typeof MediaRecorder !== 'undefined';
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+            // Determine recording method
+            let recordingMethod = isMediaRecorderSupported ? 'mediarecorder' : 'audiobuffer';
+
+            // For Safari specifically, always use audiobuffer approach
+            if (isSafari) {
+                recordingMethod = 'audiobuffer';
+            }
+
+            console.log(`Using recording method: ${recordingMethod}`);
+
+            return {
+                recordingMethod,
+                audioChunks: [],
+                audioContext: null,
+                mediaRecorder: null,
+                audioProcessor: null,
+                audioStream: null,
+                isRecording: false
+            };
+        }
+
+
+        async function startRecording(recorder) {
+            try {
+                // Reset audio chunks
+                recorder.audioChunks = [];
+
+                document.getElementById('audioPlayer').style.display = "none";
+                // Get user media
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                recorder.audioStream = stream;
+
+                if (recorder.recordingMethod === 'mediarecorder') {
+                    // Standard MediaRecorder approach (Chrome, Firefox, Edge)
+                    recorder.mediaRecorder = new MediaRecorder(stream);
+
+                    recorder.mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            recorder.audioChunks.push(event.data);
+                        }
+                    };
+
+                    recorder.mediaRecorder.start();
+                } else {
+                    // AudioBuffer approach (Safari)
+                    // Initialize audio context if needed
+                    if (!recorder.audioContext) {
+                        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                        recorder.audioContext = new AudioContext();
+                    }
+
+                    // Create source from stream
+                    const source = recorder.audioContext.createMediaStreamSource(stream);
+
+                    // Create script processor for recording
+                    const bufferSize = 4096;
+                    recorder.audioProcessor = recorder.audioContext.createScriptProcessor(bufferSize, 1, 1);
+
+                    // Connect nodes
+                    source.connect(recorder.audioProcessor);
+                    recorder.audioProcessor.connect(recorder.audioContext.destination);
+
+                    // Process audio
+                    recorder.audioProcessor.onaudioprocess = function (e) {
+                        if (!recorder.isRecording) return;
+
+                        // Get the audio data
+                        const audioBuffer = e.inputBuffer.getChannelData(0);
+                        const buffer = new Float32Array(audioBuffer.length);
+                        for (let i = 0; i < audioBuffer.length; i++) {
+                            buffer[i] = audioBuffer[i];
+                        }
+
+                        recorder.audioChunks.push(buffer);
+                    };
+                }
+
+                recorder.isRecording = true;
+                return true;
+            } catch (error) {
+                console.error('Error starting recording:', error);
+                alert('Не удалось получить доступ к микрофону. Пожалуйста, проверьте настройки разрешений.');
+                return false;
+            }
+        }
+        let recorder = initAudioRecording();
+
+
+
+        document.getElementById('start-recording').addEventListener('click', async function () {
+            const started = await startRecording(recorder);
+            if (started) {
+                document.getElementById('start-recording').disabled = true;
+                document.getElementById('stop-recording').disabled = false;
+
+                document.getElementById('send-recording').style.display = "none";
+                document.getElementById('isRecording').style.display = "block";
+            }
+        });
+
+
+        document.getElementById('stop-recording').addEventListener('click', async function () {
+            const audioBlob = await stopRecording(recorder);
+
+            document.getElementById('stop-recording').disabled = true;
+  
+
+            if (audioBlob) {
+                const audioUrl = URL.createObjectURL(audioBlob);
+                document.getElementById('audioPlayer').src = audioUrl;
+                document.getElementById('audioPlayer').style.display = "block";
+                document.getElementById('send-recording').style.display = "block";
+            }
+
+            document.getElementById('isRecording').style.display = "none";
+        });
+
+
+        document.getElementById('send-recording').addEventListener('click', function () {
+
+            document.getElementById('send-recording').disabled = true;
+            document.getElementById('await_message').style.display = 'block';
+        
+
+            let formData = new FormData();
+            let audioPlayer = document.getElementById('audioPlayer');
+
+            fetch(audioPlayer.src)
+                .then(response => response.blob())
+                .then(blob => {
+                    formData.append('action', "generateInfo");
+                    formData.append("audio", blob, "recording.wav");
+                    formData.append('businessName', document.getElementById('businessName').value);
+
+                    $.ajax({
+                        url: "/instagram/api",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            console.log(data)
+                            const business_plan = data.business_plan;
+                            
+                            setTimeout(() => {
+                                document.getElementById('send-recording').disabled = false;
+                                document.getElementById('await_message').style.display = 'none';
+                            }, 3000);
+                              const doc = new jsPDF();
+                                const lines = doc.splitTextToSize(business_plan, 180);
+                                doc.text(lines, 10, 10);
+                                doc.save("Business_Plan.pdf");
+                            $("#result").html(data.short_description);
+                            $("#result").show();
+                        },
+                        error: function (err) {
+                            console.log(err);
+                            alert(JSON.stringify(err));
+                  
+                            document.getElementById('send-recording').disabled = false;
+                            document.getElementById('await_message').style.display = 'none';
+                        }
+                    });
+                });
+        });
+
+const doc = new jsPDF();
+
+const business_plan = "Привет";
+
+doc.text(business_plan, 10, 10);
+doc.save("Business_Plan.pdf");
+        // Unified recording stop function
+        function stopRecording(recorder) {
+            recorder.isRecording = false;
+
+            if (recorder.recordingMethod === 'mediarecorder' && recorder.mediaRecorder) {
+                recorder.mediaRecorder.stop();
+
+                // Stop all tracks
+                if (recorder.audioStream) {
+                    recorder.audioStream.getTracks().forEach(track => track.stop());
+                }
+
+                // Return a promise that resolves when the media recorder is done
+                return new Promise(resolve => {
+                    recorder.mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(recorder.audioChunks, { type: 'audio/wav' });
+                        resolve(audioBlob);
+                    };
+                });
+            } else if (recorder.audioProcessor) {
+                // Disconnect and clean up for Safari
+                recorder.audioProcessor.disconnect();
+
+                // Stop all tracks
+                if (recorder.audioStream) {
+                    recorder.audioStream.getTracks().forEach(track => track.stop());
+                }
+
+                // Convert audio data to WAV for Safari
+                return new Promise(resolve => {
+                    const wavBlob = createWavBlobFromAudioData(recorder.audioChunks, recorder.audioContext.sampleRate);
+                    resolve(wavBlob);
+                });
+            }
+
+            return Promise.resolve(null);
+        }
+    </script>
+
 </body>
 
 </html>
