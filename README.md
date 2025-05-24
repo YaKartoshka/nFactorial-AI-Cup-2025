@@ -1,12 +1,14 @@
 # nFactorial-Ai-Cup-2025
 Fork this repository and build nFactorial Ai Cup 2025 projects 
 
-## < Your Name >
+## Зарубеков Ерасыл
 
-## < Your App's Name >
+## Postify.AI
 
-## < Your App's description, technical considerations, etc. >
-
+## ИИ-платформа помогает бизнесу генерировать посты, документы и запускать чат-ботов
+Использованные платформы: Meta, GroqCloud, OpenAI, Instagram Business API Platform
+Использованные модели: whisper, llama-3.3-70b-versatile, llama-3.1-8b-instant, gpt-image-1
+Технологии: HTML, CSS, Node.js, Jquery
 
 ## Typeform to submit:
 https://docs.google.com/forms/d/e/1FAIpQLSdjbTZXt-8P0OTyMEDTQDszE-YGI5KcLYsN6pwxHmX0Fa3tzg/viewform?usp=dialog
