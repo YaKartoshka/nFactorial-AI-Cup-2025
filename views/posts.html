@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        Postify.AI 
+        Postify.AI
     </title>
     <link rel="shortcut icon" href="../public/images/Favicon.png" type="image/x-icon">
     <%- include('./components/head.ejs.html') %>
@@ -42,38 +42,98 @@
 
             <a href="/"><img src="/public/images/logo.png" width="150" alt=""></a>
         </div>
-  
+
     </header>
     <main>
         <%- include('./components/nav_bar.ejs.html') %>
             <div class="content-box home-page">
-              
+                <div class="element-box">
+                    <div class="content-box home-page">
+                        <h3>Загрузите изображение и описание</h3>
+                        <form id="uploadForm">
+                            <div class="form-group">
+                                <label for="imageInput">Изображение</label>
+                                <input type="file" id="imageInput" accept="image/png">
+
+                            </div>
+                            <div class="form-group">
+                                <label for="descriptionInput">Описание</label>
+                                <textarea class="form-control" id="descriptionInput" rows="3" required></textarea>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="submitBtn">Отправить</button>
+                        </form>
+
+                        <div id="preview" class="mt-4"></div>
+                    </div>
+                </div>
 
             </div>
     </main>
     <footer></footer>
 
-   
 
 
 
 
 
 
-  
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
 
-      
-       
 
-   
+
+
+
         $(document).ready(function () {
             loading(1);
-      
-      
-            
+            let base64Image = '';
+
+            $('#imageInput').on('change', function (event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    base64Image = e.target.result;
+                    $('#preview').html(`<p>Предпросмотр:</p><img width="400" src="${base64Image}" alt="Preview" class="img-fluid"/>`);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            $('#submitBtn').on('click', function () {
+                const description = $('#descriptionInput').val().trim();
+                const imageFile = $('#imageInput')[0].files[0];
+
+
+                if (!imageFile || !description) {
+                    alert('Пожалуйста, загрузите изображение и введите описание.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('image', imageFile);
+                formData.append('description', description);
+
+                 $.ajax({
+                    url: '/instagram/post',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log("Image edited successfully");
+                        window.open(response.url, '_blank');
+                    },
+                    error: function (err) {
+                    console.error("Error editing image:", err);
+                    }
+                });
+            });
+
+
             loading(0);
         });
 
