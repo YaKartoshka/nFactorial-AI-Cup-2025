@@ -265,9 +265,19 @@ router.post('/api', upload.single("audio"), async function (req, res, next) {
 
     else
 
-    if (action == 'updateMenu'){
-      const menu = req.body.menu;
+    if (action == 'saveMenu'){
+      const instagram_welcome_message = req.body.instagram_welcome_message;
+      const menu_options = req.body.menu_options
+      writeInstagramData(instaMenuPath, {instagram_welcome_message: instagram_welcome_message, menu_options:menu_options})
+      res.send(JSON.stringify(r))
+    }
 
+    else
+
+    if (action == 'getMenu'){
+      const data = readInstagramData(instaMenuPath)
+      res.json(data)
+      
     }
 })
 
@@ -292,7 +302,7 @@ try {
     fs.unlinkSync(imagePath);
     const image_base64 = response.data[0].b64_json;
     const image_bytes = Buffer.from(image_base64, "base64");
-    fs.writeFileSync(path.join(__dirname, '..', 'public', 'images', req.file.originalname), image_bytes);
+    fs.writeFileSync(path.join(__dirname, '..', 'public', 'images', `insta_post_${req.file.originalname}`), image_bytes);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message || 'Image edit failed.' });
@@ -305,7 +315,7 @@ function readInstagramData(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-function writeInstagramData(data) {
+function writeInstagramData(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
 

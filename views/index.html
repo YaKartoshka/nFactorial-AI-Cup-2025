@@ -128,8 +128,7 @@
                                                     </div>
                                                     <div class="col-6">
                                                         <textarea class="form-control value"
-                                                            placeholder="Введите ответ">Взрослый абонемент - 20 000тг/месяц групповые.
-Детский абонемент - 15 000тг/месяц групповые.</textarea>
+                                                            placeholder="Введите ответ"></textarea>
                                                     </div>
                                                     <div class="col-auto">
                                                         <button type="button"
@@ -146,9 +145,7 @@
                                                     </div>
                                                     <div class="col-6">
                                                         <textarea class="form-control value"
-                                                            placeholder="Введите ответ">Улица Женис 67, 2 этаж, вход через KFC.
-
-https://2gis.kz/astana/geo/9570784863338869</textarea>
+                                                            placeholder="Введите ответ"></textarea>
                                                     </div>
                                                     <div class="col-auto">
                                                         <button type="button"
@@ -165,9 +162,7 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
                                                     </div>
                                                     <div class="col-6">
                                                         <textarea class="form-control value"
-                                                            placeholder="Введите ответ">Пробный урок - 1000тг. Как вас зовут и можете скинуть ваш номер телефона?
-
-С собой надо взять сменную одежду, обувь, перчатки (при наличии) и хорошее настроение.</textarea>
+                                                            placeholder="Введите ответ"></textarea>
                                                     </div>
                                                     <div class="col-auto">
                                                         <button type="button"
@@ -354,10 +349,10 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
             }
 
             $.ajax({
-                url: "/settings",
+                url: "/instagram/api",
                 method: 'post',
                 dataType: 'json',
-                data: { action: 'saveInstagramSettings', instagram_welcome_message: instagram_welcome_message, menu_options: menu_options },
+                data: { action: 'updateMenu', instagram_welcome_message: instagram_welcome_message, menu_options: menu_options },
                 success: function (data) {
                     if (data.r) {
                         $.ambiance({
@@ -372,59 +367,16 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
         }
 
 
-        function getInstagramSettings() {
-            $.ajax({
-                url: "/settings",
-                method: 'post',
-                dataType: 'json',
-                data: { action: 'getInstagramSettings' },
-                success: function (instagram_settings) {
-                    $("#instagram_welcome_message").val(instagram_settings.instagram_welcome_message)
-                    if (JSON.parse(instagram_settings.menu_options).length) $('#instagram_menu').html('')
-                    JSON.parse(instagram_settings.menu_options).forEach((option) => {
-                        const newOption = `
-                            <div class="row menu-option mt-2">
-                                <div class="col-3">
-                                    <input type="text" class="form-control key" placeholder="Введите ключевое слово" value="${option.key}">
-                                </div>
-                                <div class="col-6">
-                                    <textarea class="form-control value" placeholder="Введите ответ">${option.value}</textarea>
-                                </div>
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-danger btn-sm remove-option" onclick="removeMenuOption(this)">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div><br>`;
-                        $('#instagram_menu').append(newOption);
-                    });
-                }
-            });
-        }
-
-
-        function instagramStatusCheck() {
-            let url = new URL(window.location.href);
-            let params = new URLSearchParams(url.search);
-            let status = params.get('instagram_status');
-            if (!status) return;
-            if (status == 1) {
-                $.ambiance({ message: "Instagram подключен", title: "Успешно!", type: "success", timeout: 3 });
-            } else if (status == 2) {
-                $.ambiance({ message: "Вы отменили подключение Instagram", title: "Отмена подключения!", type: "error", timeout: 3 });
-            } else {
-                $.ambiance({ message: "Что то пошло не так. Попробуйте позже", title: "Оишбка!", type: "error", timeout: 3 });
-            }
-            params.delete('instagram_status');
-            let newUrl = url.origin + url.pathname;
-            history.pushState(null, '', newUrl);
-        }
+     
 
 
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
+        $(()=>{
+            getInstagramSettings()
+        })
         const { jsPDF } = window.jspdf;
         function initAudioRecording() {
             // Feature detection
@@ -675,6 +627,113 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
 
             return content;
         }
+
+        
+        function addNewInstagramMenuOption() {
+            const maxOptions = 5;
+            const currentOptions = $('#instagram_menu .menu-option').length;
+
+            if (currentOptions >= maxOptions) {
+                $.ambiance({
+                    message: "Можно добавить только 5 кнопок",
+                    type: "error",
+                    fade: true,
+                    width: 400
+                });
+                return;
+            }
+
+            const newOption = `
+                <div class="row menu-option mt-2">
+                    <div class="col-3">
+                        <input type="text" class="form-control key" placeholder="Введите ключевое слово">
+                    </div>
+                    <div class="col-6">
+                        <textarea type="text" class="form-control value" placeholder="Введите ответ"></textarea>
+                    </div>
+                     <div class="col-auto">
+                        <button type="button" class="btn btn-danger btn-sm remove-option" onclick="removeMenuOption(this)"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div><br>`;
+            $('#instagram_menu').append(newOption);
+        }
+
+        function removeMenuOption(button) {
+            $(button).closest('.menu-option').remove();
+        }
+
+        function saveInstagramSettings() {
+            loading(2, el = '#save_instagram_menu_btn');
+            const instagram_welcome_message = $("#instagram_welcome_message").val().trim();
+            const menu_options = [];
+            $('#instagram_menu .menu-option').each(function() {
+                const key = $(this).find('.key').val().trim();
+                const value = $(this).find('.value').val().trim();
+                if (key) {
+                    menu_options.push({ key, value });
+                }
+            });
+
+            if (!instagram_welcome_message) {
+                $.ambiance({
+                    message: "Привественное сообщение не может быть пустым",
+                    type: "error",
+                    fade: true,
+                    width: 400
+                });
+                loading(20, el = '#save_instagram_menu_btn');
+                return;
+            }
+
+            $.ajax({
+                url: "/instagram/api",
+                method: 'post',
+                dataType: 'json',
+                data: { action: 'saveMenu', instagram_welcome_message: instagram_welcome_message, menu_options: menu_options },
+                success: function(data){
+                    if(data.r){
+                        $.ambiance({
+                            message: `Настройки Instagram сохранены`,
+                            type: "success",
+                            fade: true
+                        });
+                    }
+                    loading(20, el = '#save_instagram_menu_btn');
+                }
+            });
+        }
+
+            function getInstagramSettings() {
+            $.ajax({
+                url: "/instagram/api",
+                method: 'post',
+                dataType: 'json',
+                data: { action: 'getMenu'},
+                success: function(instagram_settings){
+                    $("#instagram_welcome_message").val(instagram_settings.instagram_welcome_message)
+                    if(instagram_settings.menu_options.length) $('#instagram_menu').html('') 
+                    instagram_settings.menu_options.forEach((option) => {
+                        const newOption = `
+                            <div class="row menu-option mt-2">
+                                <div class="col-3">
+                                    <input type="text" class="form-control key" placeholder="Введите ключевое слово" value="${option.key}">
+                                </div>
+                                <div class="col-6">
+                                    <textarea class="form-control value" placeholder="Введите ответ">${option.value}</textarea>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-danger btn-sm remove-option" onclick="removeMenuOption(this)">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div><br>`;
+                        $('#instagram_menu').append(newOption);
+                    });
+                }
+            });
+        }
+
+
     </script>
 
 </body>
