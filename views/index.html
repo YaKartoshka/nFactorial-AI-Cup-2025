@@ -209,10 +209,9 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
                         <audio id="audioPlayer" playsinline controls style="display: none;"></audio>
                         <br><br>
                         <button id="send-recording" class="btn btn-primary" style="display: none;">Отправить</button>
-                        <p id="await_message" class="mt-2" style="display: none;">Ожидайте ответ в течении 10-15 секунд
-                        </p>
+                         <p id="await_message" class="mt-2" style="display: none;">Ожидайте ответ в течении 10-15 секунд</p>
 
-                        <div id="result"></div>
+                         <div id="result"></div>
                     </div>
                 </div>
             </div>
@@ -232,7 +231,7 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
     <script>
 
 
-
+       
         let audioContext;
 
         let isRecording = false;
@@ -422,7 +421,7 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
 
 
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
         const { jsPDF } = window.jspdf;
@@ -536,7 +535,7 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
             const audioBlob = await stopRecording(recorder);
 
             document.getElementById('stop-recording').disabled = true;
-
+  
 
             if (audioBlob) {
                 const audioUrl = URL.createObjectURL(audioBlob);
@@ -553,7 +552,7 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
 
             document.getElementById('send-recording').disabled = true;
             document.getElementById('await_message').style.display = 'block';
-
+        
 
             let formData = new FormData();
             let audioPlayer = document.getElementById('audioPlayer');
@@ -573,39 +572,23 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
                         contentType: false,
                         success: function (data) {
                             console.log(data)
-                            const plan = data.business_plan;
-
+                            const business_plan = data.business_plan;
+                            
                             setTimeout(() => {
                                 document.getElementById('send-recording').disabled = false;
                                 document.getElementById('await_message').style.display = 'none';
                             }, 3000);
-                            const doc = new jsPDF();
-                         
+                              const doc = new jsPDF();
+                                const lines = doc.splitTextToSize(business_plan, 180);
+                                doc.text(lines, 10, 10);
+                                doc.save("Business_Plan.pdf");
                             $("#result").html(data.short_description);
                             $("#result").show();
-
-                            const docDefinition = {
-                                content: parseTextToContent(plan),
-                                styles: {
-                                    sectionHeader: {
-                                        fontSize: 16,
-                                        bold: true,
-                                        color: '#2c3e50'
-                                    }
-                                },
-                                defaultStyle: {
-                                    font: 'Roboto',
-                                    fontSize: 12
-                                }
-                            };
-
-                            pdfMake.createPdf(docDefinition).download("План.pdf");
-
                         },
                         error: function (err) {
                             console.log(err);
                             alert(JSON.stringify(err));
-
+                  
                             document.getElementById('send-recording').disabled = false;
                             document.getElementById('await_message').style.display = 'none';
                         }
@@ -613,6 +596,12 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
                 });
         });
 
+const doc = new jsPDF();
+
+const business_plan = "Привет";
+
+doc.text(business_plan, 10, 10);
+doc.save("Business_Plan.pdf");
         // Unified recording stop function
         function stopRecording(recorder) {
             recorder.isRecording = false;
@@ -649,36 +638,6 @@ https://2gis.kz/astana/geo/9570784863338869</textarea>
             }
 
             return Promise.resolve(null);
-        }
-
-        function parseTextToContent(text) {
-            const lines = text.split('\n');
-            const content = [];
-
-            lines.forEach(line => {
-                if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
-                    // Заголовок раздела
-                    content.push({
-                        text: line.replace(/\*\*/g, '').trim(),
-                        style: 'sectionHeader',
-                        margin: [0, 10, 0, 5]
-                    });
-                } else if (line.trim().startsWith('*')) {
-                    // Пункт списка
-                    content.push({
-                        ul: [{ text: line.replace(/^\*\s*/, '').trim() }],
-                        margin: [10, 0, 0, 0]
-                    });
-                } else if (line.trim() !== '') {
-                    // Простой абзац
-                    content.push({
-                        text: line.trim(),
-                        margin: [0, 5, 0, 0]
-                    });
-                }
-            });
-
-            return content;
         }
     </script>
 
