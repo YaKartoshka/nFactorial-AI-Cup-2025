@@ -1,0 +1,46 @@
+<link href="../public/fonts/fonts.css" rel="stylesheet" />
+<link rel="stylesheet" href="/public/css/ambiance.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
+<link rel="stylesheet" href="/public/css/bootstrap.css">
+<link rel="stylesheet" href="/public/css/style.css">
+<link rel="stylesheet" href="/public/fonts/font-awesome.min.css">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/public/js/ambiance.js "></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"></script>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
+<script>
+    function loading(mode, el = null) {
+        if (mode == 1) {
+            $.LoadingOverlay("show");
+        }
+        else if (mode == 0) {
+            $.LoadingOverlay("hide");
+        }
+        else if (mode == 2) {
+            $(el).prepend('<div class="spinner-border"></div>').attr('disabled', true);
+        } else if (mode == 20) {
+            setTimeout(function () {
+                $(el).removeAttr('disabled');
+                $(el).find('.spinner-border').remove();
+            }, 500);
+        } else if (mode == 3) {
+            $(el).append(' <div class="spinner-border"></div>');
+        } else if (mode == 30) {
+            $(el).find('.spinner-border').remove();
+        }
+    }
+
+    function toggleMenu() {
+        $('.nav-bar').toggle(200);
+    }
+
+    
+</script>

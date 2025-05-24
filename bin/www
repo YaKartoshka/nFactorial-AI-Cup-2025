@@ -1,0 +1,32 @@
+var args = process.argv.slice(2);
+run_mode = args[1];
+var http = require('http')
+getConnection = function () {
+  return pool;
+}
+
+
+
+var app = require("../app");
+let port = 4001;
+
+
+
+if (run_mode == 2) { 
+  var server = http.createServer(app);
+  server.listen(port);
+  console.log(`App is listening at host http://localhost:${port}`);
+} else {
+  var server = http.createServer(app);
+  server.listen(port);
+  console.log(`App is listening at host http://localhost:${port}`);
+}
+
+generateSK = () => {
+  var sk = crypto.randomBytes(20).toString("hex");
+  return sk;
+}
+
+delay = function(ms){
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
